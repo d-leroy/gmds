@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------------*/
-#ifndef GMDS_BLOCKING_H
-#define GMDS_BLOCKING_H
+#ifndef GMDS_BLOCKING2D_H
+#define GMDS_BLOCKING2D_H
 /*----------------------------------------------------------------------------*/
 #include <gmds/ig/Mesh.h>
 #include "GMDSIg_export.h"
@@ -81,6 +81,12 @@ class GMDSIg_API Blocking2D: public Mesh{
 		 */
 		bool isEdgeOnJ(TCellID AID);
 
+		void computeT();
+
+		std::map<int,std::vector<int>> getT();
+
+		std::map<int,std::vector<int>> getInterfaceInfo();
+
 	 private:
 		/** Access to the edge with local index @p AI nad @p AJ in the
              *  current face
@@ -106,6 +112,9 @@ class GMDSIg_API Blocking2D: public Mesh{
 		Face m_face;
 		Blocking2D* m_support;
 		Array2D<TCellID>* m_grid_view;
+
+		std::map<int ,std::vector<int>> m_b_T;
+		std::map<int, std::vector<int>> m_interface_info;
 	};
 	/** @brief Constructor
 	 */
@@ -234,4 +243,4 @@ class GMDSIg_API Blocking2D: public Mesh{
 
 };
 }
-#endif //GMDS_BLOCKING_H
+#endif //GMDS_BLOCKING2D_H

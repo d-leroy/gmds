@@ -4,7 +4,6 @@
 
 /*----------------------------------------------------------------------------*/
 #include <gmds/claire/AeroMeshQuality.h>
-#include <gmds/claire/Utils.h>
 /*----------------------------------------------------------------------------*/
 namespace gmds {
 /*----------------------------------------------------------------------------*/
@@ -12,77 +11,7 @@ namespace math {
 
 
 /*------------------------------------------------------------------------*/
-double AeroMeshQuality::oppositeedgeslenghtratio(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id){
-
-	//std::cout << "ids : " << n0_id << ", " << n1_id << ", " << n2_id << ", " << n3_id << std::endl;
-
-	double r1 = Utils::distFromNodeIds(AMesh, n0_id, n1_id)/Utils::distFromNodeIds(AMesh, n2_id, n3_id) ;
-	//if(r1 >= 1){
-	//	r1 = 1.0/r1;
-	//}
-
-	/*
-	double r2 = Utils::distFromNodeIds(AMesh, n1_id, n2_id)/Utils::distFromNodeIds(AMesh, n3_id, n0_id) ;
-	if(r2 >= 1){
-		r2 = 1.0/r2;
-	}
-
-	std::cout << "R1 et R2 " << r1 << " " << r2 << std::endl;
-	std::cout << "--------------------------" << std::endl;
-	 */
-
-	//return std::min(r1, r2);
-	return r1;
-}
-/*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::angleouverture(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id){
-
-	//std::cout << "ids : " << n0_id << ", " << n1_id << ", " << n2_id << ", " << n3_id << std::endl;
-
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point p0 = n0.point();
-	math::Point p1 = n1.point();
-	math::Point p2 = n2.point();
-	math::Point p3 = n3.point();
-
-	Vector3d v1 = p1-p0;
-	Vector3d v2 = p2-p0;
-	Vector3d v3 = p3-p0;
-
-	v1 = v1.normalize();
-	v2 = v2.normalize();
-	v3 = v3.normalize();
-
-	double angle1 = acos(v1.dot(v2)) ;
-
-	double angle2 = acos(v1.dot(v3)) ;
-
-	return angle1+angle2;
-}
-/*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::minlenghtedge(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id){
-
-	//std::cout << "ids : " << n0_id << ", " << n1_id << ", " << n2_id << ", " << n3_id << std::endl;
-
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point p0 = n0.point();
-	math::Point p1 = n1.point();
-	math::Point p2 = n2.point();
-	math::Point p3 = n3.point();
+double AeroMeshQuality::minlenghtedge(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3){
 
 	Vector3d v1 = p1-p0;
 	Vector3d v2 = p1-p2;
@@ -92,20 +21,23 @@ double AeroMeshQuality::minlenghtedge(Mesh *AMesh, TCellID n0_id, TCellID n1_id,
 	return std::min(std::min(v1.norm(), v2.norm()), std::min(v3.norm(), v4.norm()));
 }
 /*------------------------------------------------------------------------*/
+double AeroMeshQuality::AngleOuverture(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
+{
+	Vector3d v1 = p1-p0;
+	Vector3d v2 = p2-p0;
+	Vector3d v3 = p3-p0;
+	v1.normalize();
+	v2.normalize();
+	v3.normalize();
 
+	double angle1 = acos(v1.dot(v2));
+	double angle2 = acos(v1.dot(v3));
 
+	return angle1+angle2;
+
+}
 /*------------------------------------------------------------------------*/
-double AeroMeshQuality::AspectRatioQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id){
-
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point p0 = n0.point();
-	math::Point p1 = n1.point();
-	math::Point p2 = n2.point();
-	math::Point p3 = n3.point();
+double AeroMeshQuality::AspectRatioQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3){
 
 	Vector3d a = p2-p0;
 	Vector3d b = p1-p3;
@@ -114,20 +46,7 @@ double AeroMeshQuality::AspectRatioQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_i
 
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::InternalAngleDeviationQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id){
-
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point p0 = n0.point();
-	math::Point p1 = n1.point();
-	math::Point p2 = n2.point();
-	math::Point p3 = n3.point();
+double AeroMeshQuality::InternalAngleDeviationQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3){
 
 	Vector3d e1 = p1-p0;
 	Vector3d e2 = p2-p1;
@@ -151,21 +70,8 @@ double AeroMeshQuality::InternalAngleDeviationQUAD(Mesh *AMesh, TCellID n0_id, T
 
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::EquiAngleSkewnessQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::EquiAngleSkewnessQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point p0 = n0.point();
-	math::Point p1 = n1.point();
-	math::Point p2 = n2.point();
-	math::Point p3 = n3.point();
-
 	Vector3d e1 = p1-p0;
 	Vector3d e2 = p2-p1;
 	Vector3d e3 = p3-p2;
@@ -189,25 +95,12 @@ double AeroMeshQuality::EquiAngleSkewnessQUAD(Mesh *AMesh, TCellID n0_id, TCellI
 
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::ConditionQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::ConditionQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d L0 = P1-P0;
-	Vector3d L1 = P2-P1;
-	Vector3d L2 = P3-P2;
-	Vector3d L3 = P0-P3;
+	Vector3d L0 = p1-p0;
+	Vector3d L1 = p2-p1;
+	Vector3d L2 = p3-p2;
+	Vector3d L3 = p0-p3;
 
 	double l0 = L0.norm() ;
 	double l1 = L1.norm() ;
@@ -219,8 +112,8 @@ double AeroMeshQuality::ConditionQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id,
 	Vector3d N2 = L1.cross(L2) ;
 	Vector3d N3 = L2.cross(L3) ;
 
-	Vector3d X1 = (P1-P0) + (P2-P3) ;
-	Vector3d X2 = (P2-P1) + (P3-P0) ;
+	Vector3d X1 = (p1-p0) + (p2-p3) ;
+	Vector3d X2 = (p2-p1) + (p3-p0) ;
 
 	Vector3d Nc = X1.cross(X2) ;
 	Vector3d nc = Nc /Nc.norm() ;
@@ -236,25 +129,12 @@ double AeroMeshQuality::ConditionQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id,
 	return (1.0/2.0)*std::max( max1, max2  );
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::EdgeRatioQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::EdgeRatioQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d L0 = P1-P0;
-	Vector3d L1 = P2-P1;
-	Vector3d L2 = P3-P2;
-	Vector3d L3 = P0-P3;
+	Vector3d L0 = p1-p0;
+	Vector3d L1 = p2-p1;
+	Vector3d L2 = p3-p2;
+	Vector3d L3 = p0-p3;
 
 	double l0 = L0.norm() ;
 	double l1 = L1.norm() ;
@@ -267,38 +147,20 @@ double AeroMeshQuality::EdgeRatioQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id,
 	return Lmax/Lmin;
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::JacobianQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::JacobianQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d L0 = P1-P0;
-	Vector3d L1 = P2-P1;
-	Vector3d L2 = P3-P2;
-	Vector3d L3 = P0-P3;
-
-	double l0 = L0.norm() ;
-	double l1 = L1.norm() ;
-	double l2 = L2.norm() ;
-	double l3 = L3.norm() ;
+	Vector3d L0 = p1-p0;
+	Vector3d L1 = p2-p1;
+	Vector3d L2 = p3-p2;
+	Vector3d L3 = p0-p3;
 
 	Vector3d N0 = L3.cross(L0) ;
 	Vector3d N1 = L0.cross(L1) ;
 	Vector3d N2 = L1.cross(L2) ;
 	Vector3d N3 = L2.cross(L3) ;
 
-	Vector3d X1 = (P1-P0) + (P2-P3) ;
-	Vector3d X2 = (P2-P1) + (P3-P0) ;
+	Vector3d X1 = (p1-p0) + (p2-p3) ;
+	Vector3d X2 = (p2-p1) + (p3-p0) ;
 
 	Vector3d Nc = X1.cross(X2) ;
 	Vector3d nc = Nc / Nc.norm() ;
@@ -311,25 +173,12 @@ double AeroMeshQuality::JacobianQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, 
 	return std::min( std::min(a0, a1), std::min(a2, a3) );
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::ScaledJacobianQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::ScaledJacobianQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d L0 = P1-P0;
-	Vector3d L1 = P2-P1;
-	Vector3d L2 = P3-P2;
-	Vector3d L3 = P0-P3;
+	Vector3d L0 = p1-p0;
+	Vector3d L1 = p2-p1;
+	Vector3d L2 = p3-p2;
+	Vector3d L3 = p0-p3;
 
 	double l0 = L0.norm() ;
 	double l1 = L1.norm() ;
@@ -341,8 +190,8 @@ double AeroMeshQuality::ScaledJacobianQUAD(Mesh *AMesh, TCellID n0_id, TCellID n
 	Vector3d N2 = L1.cross(L2) ;
 	Vector3d N3 = L2.cross(L3) ;
 
-	Vector3d X1 = (P1-P0) + (P2-P3) ;
-	Vector3d X2 = (P2-P1) + (P3-P0) ;
+	Vector3d X1 = (p1-p0) + (p2-p3) ;
+	Vector3d X2 = (p2-p1) + (p3-p0) ;
 
 	Vector3d Nc = X1.cross(X2) ;
 	Vector3d nc = Nc /Nc.norm() ;
@@ -360,25 +209,12 @@ double AeroMeshQuality::ScaledJacobianQUAD(Mesh *AMesh, TCellID n0_id, TCellID n
 	return std::min( std::min(sj0, sj1), std::min(sj2, sj3) );
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::ShapeQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::ShapeQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d L0 = P1-P0;
-	Vector3d L1 = P2-P1;
-	Vector3d L2 = P3-P2;
-	Vector3d L3 = P0-P3;
+	Vector3d L0 = p1-p0;
+	Vector3d L1 = p2-p1;
+	Vector3d L2 = p3-p2;
+	Vector3d L3 = p0-p3;
 
 	double l0 = L0.norm() ;
 	double l1 = L1.norm() ;
@@ -390,8 +226,8 @@ double AeroMeshQuality::ShapeQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCe
 	Vector3d N2 = L1.cross(L2) ;
 	Vector3d N3 = L2.cross(L3) ;
 
-	Vector3d X1 = (P1-P0) + (P2-P3) ;
-	Vector3d X2 = (P2-P1) + (P3-P0) ;
+	Vector3d X1 = (p1-p0) + (p2-p3) ;
+	Vector3d X2 = (p2-p1) + (p3-p0) ;
 
 	Vector3d Nc = X1.cross(X2) ;
 	Vector3d nc = Nc /Nc.norm() ;
@@ -409,23 +245,10 @@ double AeroMeshQuality::ShapeQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCe
 	return 2.0*std::min( std::min(s0, s1), std::min(s2, s3) );
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::SkewQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::SkewQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d X1 = (P1-P0) + (P2-P3) ;
-	Vector3d X2 = (P2-P1) + (P3-P0) ;
+	Vector3d X1 = (p1-p0) + (p2-p3) ;
+	Vector3d X2 = (p2-p1) + (p3-p0) ;
 
 	Vector3d x1 = X1 / X1.norm() ;
 	Vector3d x2 = X2 / X2.norm() ;
@@ -433,33 +256,20 @@ double AeroMeshQuality::SkewQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCel
 	return abs(x1.dot(x2));
 }
 /*------------------------------------------------------------------------*/
-
-
-/*------------------------------------------------------------------------*/
-double AeroMeshQuality::StretchQUAD(Mesh *AMesh, TCellID n0_id, TCellID n1_id, TCellID n2_id, TCellID n3_id)
+double AeroMeshQuality::StretchQUAD(const math::Point& p0, const math::Point& p1, const math::Point& p2, const math::Point& p3)
 {
-	Node n0 = AMesh->get<Node>(n0_id);
-	Node n1 = AMesh->get<Node>(n1_id);
-	Node n2 = AMesh->get<Node>(n2_id);
-	Node n3 = AMesh->get<Node>(n3_id);
-
-	math::Point P0 = n0.point();
-	math::Point P1 = n1.point();
-	math::Point P2 = n2.point();
-	math::Point P3 = n3.point();
-
-	Vector3d L0 = P1-P0;
-	Vector3d L1 = P2-P1;
-	Vector3d L2 = P3-P2;
-	Vector3d L3 = P0-P3;
+	Vector3d L0 = p1-p0;
+	Vector3d L1 = p2-p1;
+	Vector3d L2 = p3-p2;
+	Vector3d L3 = p0-p3;
 
 	double l0 = L0.norm() ;
 	double l1 = L1.norm() ;
 	double l2 = L2.norm() ;
 	double l3 = L3.norm() ;
 
-	Vector3d D0 = P2-P0;
-	Vector3d D1 = P3-P1;
+	Vector3d D0 = p2-p0;
+	Vector3d D1 = p3-p1;
 
 	double Dmax = std::max(D0.norm(), D1.norm());
 	double lmin = std::min(std::min(l0, l1), std::min(l2, l3));

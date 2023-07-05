@@ -13,7 +13,7 @@
 #include <gmds/dualBlocking/BoundarySurfaceCreator.h>
 
 
-#include <gmds/cad/FACManager.h>
+#include <gmds/cadfac/FACManager.h>
 #include <gmds/cad/GeomMeshLinker.h>
 
 #include "EdgeDiscrAlgo.h"
@@ -71,7 +71,7 @@ namespace db {
         int createBlock();
 
         void smoothBlocks();
-        void resetBlockSmoothing(){;};
+        void resetBlockSmoothing(){};
         void interpolation(int Ait);
 
         void interpolationV2(int Ait);

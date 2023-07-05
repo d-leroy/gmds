@@ -43,7 +43,7 @@ namespace gmds{
             for (auto i = 0; i < m_i; i++) {
                 m_tab[i].resize(m_j);
                 for (auto j = 0; j < m_j; j++) {
-                    m_tab[i][j] = A[i][j];
+                    m_tab[i][j] = A(i,j);
                 }
             }
         }
@@ -57,14 +57,15 @@ namespace gmds{
             for (auto i = 0; i < m_i; i++) {
                 m_tab[i].resize(m_j);
                 for (auto j = 0; j < m_j; j++) {
-                    m_tab[i][j] = A[i][j];
+                    m_tab[i][j] = A(i,j);
                 }
             }
+		      return *this;
         }
         /*------------------------------------------------------------------------*/
         /** \brief Destructor
         */
-        virtual  ~Array2D(){;}
+        virtual  ~Array2D(){}
 
         /*------------------------------------------------------------------------*/
         /** \brief give the number of lines
@@ -152,7 +153,7 @@ namespace gmds{
         /*------------------------------------------------------------------------*/
         /** \brief Destructor
         */
-        virtual  ~TriArray(){;}
+        virtual  ~TriArray(){}
 
         /*------------------------------------------------------------------------*/
         /** \brief give the number of lines
@@ -286,11 +287,12 @@ namespace gmds{
                     }
                 }
             }
+		      return *this;
         }
         /*------------------------------------------------------------------------*/
         /** \brief Destructor
         */
-        virtual  ~Array3D(){;}
+        virtual  ~Array3D(){}
 
         /*------------------------------------------------------------------------*/
         /** \brief give the number of elements for dim @p ADim

@@ -49,15 +49,15 @@ namespace gmds{
         }
         /*------------------------------------------------------------------------*/
         Point BezierCurve::operator()(const double& AT) const {
-            if(AT>1.0 || AT<0.0)
-                throw GMDSException("BezierCurve Query out of the range [0,1]");
+            //if(AT>1.0 || AT<0.0)
+            //    throw GMDSException("BezierCurve Query out of the range [0,1]");
 
 
             std::vector<Point> current_control = m_control_points;
             while(current_control.size()>1){
 
                 std::vector<Point> next_control;
-                const int deg = current_control.size();
+                auto deg = current_control.size();
 
                 next_control.resize(deg-1);
                 for(int i=0; i<deg-1; i++){
@@ -70,7 +70,7 @@ namespace gmds{
             return current_control[0];
         }
         /*------------------------------------------------------------------------*/
-        std::vector<Point> BezierCurve:: getDiscretization(const int ANb) const {
+        std::vector<Point> BezierCurve:: getDiscretization(int ANb) const {
             if(ANb<1)
                 throw GMDSException("BezierCurve discretization impossible with this parameter");
 

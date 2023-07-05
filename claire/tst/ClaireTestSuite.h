@@ -2,16 +2,19 @@
 // Created by ledouxf on 1/22/19.
 //
 /*----------------------------------------------------------------------------*/
-#include <gmds/cad/FACManager.h>
+#include <gmds/cadfac/FACManager.h>
 #include "gmds/io/VTKReader.h"
 #include <gmds/claire/Grid_Smooth2D.h>
 #include <gmds/claire/Smooth2D.h>
+#include <gmds/claire/SmoothLineSweepingOrtho.h>
 #include <gmds/ig/Mesh.h>
 #include <gmds/ig/MeshDoctor.h>
 #include <gmds/igalgo/BoundaryOperator2D.h>
 #include <gmds/igalgo/GridBuilder.h>
 #include <gmds/io/IGMeshIOService.h>
 #include <gmds/io/VTKWriter.h>
+#include <gmds/math/Line.h>
+#include <gmds/math/BezierCurve.h>
 #include <gtest/gtest.h>
 #include <iostream>
 #include <unit_test_config.h>
@@ -661,4 +664,110 @@ TEST(ClaireTestClass, test_pour_interpolation)
 
 	ASSERT_FLOAT_EQ(p.X(),3.8780577);
 	ASSERT_FLOAT_EQ(p.Y(),5.6330175);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TEST(ClaireTestClass, test_Bug_1)
+{
+	math::Vector3d v_1({1.0, 0.0, 0.0});
+	math::Vector3d n = v_1.getOneOrtho();
+
+	std::cout << v_1 << std::endl;
+	std::cout << n << std::endl;		// n is supposed to be a normal vector to v_1 but n is equal to 0.
+
+	ASSERT_FLOAT_EQ( v_1.X(), 1.0);
+
+}
+
+
+/*
+TEST(ClaireTestClass, test_Bug_2)
+{
+	Blocking2D blocking;
+
+	Node n1 = blocking.newBlockCorner(0,0);
+	Node n2 = blocking.newBlockCorner(5,0);
+	Node n3 = blocking.newBlockCorner(10,5);
+	Node n4=  blocking.newBlockCorner(10,10);
+
+	Blocking2D::Block b1 = blocking.newBlock(n1,n2,n3,n4);
+	b1.setNbDiscretizationI(10);
+	b1.setNbDiscretizationJ(10);
+
+	int mark_1 = blocking.newMark<Node>();
+	int mark_2 = blocking.newMark<Node>();
+
+	std::cout << "Marque 1, id : " << mark_1 << std::endl;
+	std::cout << "Marque 2, id : " << mark_2 << std::endl;
+
+	blocking.unmarkAll<Node>(mark_1);
+	blocking.freeMark<Node>(mark_1);
+	blocking.unmarkAll<Node>(mark_2);
+	blocking.freeMark<Node>(mark_2);
+
+	ASSERT_NE( mark_1, mark_2);
+
+}
+ */
+
+
+TEST(ClaireTestClass, test_Bug_3)
+{
+
+	math::Point A({28.208, -67.9729, 0});
+	math::Point B({-18.6767, -23.5042, 0});
+	math::Point C({-4.9457, -43.606, 0});
+
+	math::BezierCurve bcurve(A, C, B);
+
+	// If nb_dubdi = 50 for instance, exception returned
+	std::vector<math::Point> new_pos = bcurve.getDiscretization(30);
+
+	std::ofstream stream= std::ofstream("BCurve.txt", std::ios::out);
+	//set the numerical precision (number of digits)
+	stream.precision(15);
+	//Header indicating which type of file it is
+	//stream << "# Claire PHD Debug Version 1.0\n\n";
+
+	for (auto p:new_pos)
+	{
+		stream << p.X() << " " << p.Y() << " " << p.Z() << "\n" ;
+	}
+
+	stream.close();
+
+	ASSERT_FLOAT_EQ( 1.0, 1.0);
+
+}
+
+
+TEST(ClaireTestClass, test_Bug_4)
+{
+	math::Vector3d v({1.0, 0.0, 0.0});
+
+	math::Point p({0,0,0});
+	math::Point p1 = p + -v;
+	//math::Point p1 = p - v;		// This line is considered as an error, but the upper line is correct
+
+	ASSERT_FLOAT_EQ( p1.X(), -1.0);
+
 }

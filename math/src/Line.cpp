@@ -22,12 +22,6 @@ namespace gmds{
         {
             return m_p2;
         }
-        /*------------------------------------------------------------------------*/
-        Line& Line::operator=(const Line& AL) {
-            m_p1 = AL.m_p1;
-            m_p2 = AL.m_p2;
-            return *this;
-        }
         /*----------------------------------------------------------------------------*/
         bool Line::intersect2D(const Line& AL, Point& AP, double& AParam) const {
             
@@ -62,12 +56,12 @@ namespace gmds{
             
             //param in [src_pnt,dir_pnt]
             double t = N/D;
-            
-            if ((0.0 <= s) && (s <= 1.0) && (0.0 < t)){
+
+            //if ((0.0 <= s) && (s <= 1.0) && (0.0 < t)){
                 AP = p1 + s*(p2-p1);
                 AParam = 1-s;
                 return true;
-            }
+            //}
             return false;
             
         }

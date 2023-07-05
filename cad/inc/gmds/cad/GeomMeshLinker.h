@@ -18,10 +18,6 @@
 
 #include "gmds/cad/GeomCurve.h"
 #include "gmds/cad/GeomManager.h"
-#include "gmds/cad/FACVolume.h"
-#include "gmds/cad/FACSurface.h"
-#include "gmds/cad/FACCurve.h"
-#include "gmds/cad/FACPoint.h"
 #include "GMDSCad_export.h"
 
 #include "gmds/ig/Edge.h"
@@ -47,12 +43,7 @@ namespace gmds{
 
         public:
 
-            enum ELink{
-                NO_LINK=0,
-                LINK_POINT=1,
-                LINK_CURVE=2,
-                LINK_SURFACE=3,
-                LINK_VOLUME=4
+            enum eLink { NoLink =0, LinkPoint =1, LinkCurve =2, LinkSurface =3, LinkVolume =4
             };
             GeomMeshLinker();
             /*------------------------------------------------------------------------*/
@@ -85,7 +76,7 @@ namespace gmds{
              *
              * @param AFileName filename to store the mesh in vtk format
              */
-            void writeVTKDebugMesh(const std::string AFileName);
+            void writeVTKDebugMesh(const std::string& AFileName);
 
             void setGeometry(GeomManager* AGeometry);
 
@@ -95,28 +86,28 @@ namespace gmds{
              * @param AN        A node of m_mesh
              * @param AGeomId   point id in the geom manager
              */
-            void linkToPoint(const Node& AN, const int AGeomId);
+            void linkToPoint(const Node& AN, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify node AN onto point AGeomID
              *
              * @param AN        A node id of m_mesh
              * @param AGeomId   point id in the geom manager
              */
-            void linkNodeToPoint(const TCellID & AN, const int AGeomId);
+            void linkNodeToPoint(const TCellID & AN, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify node AN onto curve AGeomID
              *
              * @param AN        A node of m_mesh
              * @param AGeomId   curve id in the geom manager
              */
-            void linkToCurve(const Node& AN, const int AGeomId);
+            void linkToCurve(const Node& AN, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify node AN onto curve AGeomID
              *
              * @param AN        A node id of m_mesh
              * @param AGeomId   curve id in the geom manager
              */
-            void linkNodeToCurve(const TCellID & AN, const int AGeomId);
+            void linkNodeToCurve(const TCellID & AN, int AGeomId);
 
             /*------------------------------------------------------------------------*/
             /**@brief classify edge AE onto curve AGeomID
@@ -124,21 +115,21 @@ namespace gmds{
              * @param AE        An edge of m_mesh
              * @param AGeomId   curve id in the geom manager
              */
-            void linkToCurve(const Edge& AE, const int AGeomId);
+            void linkToCurve(const Edge& AE, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify edge AE onto curve AGeomID
              *
              * @param AE        An edge id of m_mesh
              * @param AGeomId   curve id in the geom manager
              */
-            void linkEdgeToCurve(const TCellID & AE, const int AGeomId);
+            void linkEdgeToCurve(const TCellID & AE, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify node AN onto surface AGeomID
              *
              * @param AN        A node of m_mesh
              * @param AGeomId   surface id in the geom manager
              */
-            void linkToSurface(const Node& AN, const int AGeomId);
+            void linkToSurface(const Node& AN, int AGeomId);
 
             /*------------------------------------------------------------------------*/
             /**@brief classify node AN onto surface AGeomID
@@ -146,14 +137,14 @@ namespace gmds{
              * @param AN        A node id of m_mesh
              * @param AGeomId   surface id in the geom manager
              */
-            void linkNodeToSurface(const TCellID & AN, const int AGeomId);
+            void linkNodeToSurface(const TCellID & AN, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify edge AE onto surface AGeomID
              *
              * @param AE        An edge of m_mesh
              * @param AGeomId   surface id in the geom manager
              */
-            void linkToSurface(const Edge& AE, const int AGeomId);
+            void linkToSurface(const Edge& AE, int AGeomId);
 
             /*------------------------------------------------------------------------*/
             /**@brief classify edge AE onto surface AGeomID
@@ -161,14 +152,14 @@ namespace gmds{
              * @param AE        An edge id of m_mesh
              * @param AGeomId   surface id in the geom manager
              */
-            void linkEdgeToSurface(const TCellID & AE, const int AGeomId);
+            void linkEdgeToSurface(const TCellID & AE, int AGeomId);
             /*------------------------------------------------------------------------*/
             /**@brief classify face AF onto surface AGeomID
              *
              * @param AF        A face of m_mesh
              * @param AGeomId   surface id in the geom manager
              */
-            void linkToSurface(const Face& AF, const int AGeomId);
+            void linkToSurface(const Face& AF, int AGeomId);
 
             /*------------------------------------------------------------------------*/
             /**@brief classify face AF onto surface AGeomID
@@ -176,7 +167,7 @@ namespace gmds{
              * @param AF        A face id of m_mesh
              * @param AGeomId   surface id in the geom manager
              */
-            void linkFaceToSurface(const TCellID & AF, const int AGeomId);
+            void linkFaceToSurface(const TCellID & AF, int AGeomId);
 
             /*------------------------------------------------------------------------*/
             /**@ brief accessor on the dimension of the geom entity AN is classified on.
@@ -184,9 +175,9 @@ namespace gmds{
              * @param AN a node
              * @return the dimension of the geom entity AN is classified on
              */
-            ELink getGeomDim(const Node& AN);
-            ELink getGeomDim(const Edge& AE);
-            ELink getGeomDim(const Face& AF);
+	         eLink getGeomDim(const Node& AN);
+	         eLink getGeomDim(const Edge& AE);
+	         eLink getGeomDim(const Face& AF);
             /*------------------------------------------------------------------------*/
             /**@ brief accessor on the id of the geom entity AN is classified on.
              *
@@ -202,7 +193,7 @@ namespace gmds{
              * @param AN a node id
              * @return the dimension of the geom entity AN is classified on
              */
-            template<typename T> GMDSCad_API ELink getGeomDim(const TCellID& AN);
+            template<typename T> GMDSCad_API eLink getGeomDim(const TCellID& AN);
             /*------------------------------------------------------------------------*/
             /**@ brief accessor on the id of the geom entity AN is classified on.
              *
@@ -218,9 +209,9 @@ namespace gmds{
              * @param AN a node
              * @return the (dim, id) of the geom entity AN is classified on
              */
-            std::pair<ELink,int> getGeomInfo(const Node& AN);
-            std::pair<ELink,int> getGeomInfo(const Edge& AE);
-            std::pair<ELink,int> getGeomInfo(const Face& AF);
+            std::pair<eLink,int> getGeomInfo(const Node& AN);
+            std::pair<eLink,int> getGeomInfo(const Edge& AE);
+            std::pair<eLink,int> getGeomInfo(const Face& AF);
 
             /*------------------------------------------------------------------------*/
             /**@ brief accessor on the dimension and id of the geom entity AN is
@@ -229,7 +220,7 @@ namespace gmds{
              * @param AN a node id
              * @return the (dim, id) of the geom entity AN is classified on
              */
-            template<typename T> GMDSCad_API  std::pair<ELink,int> getGeomInfo(const TCellID& AN);
+            template<typename T> GMDSCad_API  std::pair<eLink,int> getGeomInfo(const TCellID& AN);
 
         private:
 
@@ -242,30 +233,30 @@ namespace gmds{
             /** geometric model we work on*/
             GeomManager* m_geometry;
             /** variable storing the dim. of the geom entity each node is linked to*/
-            Variable<ELink>* m_node_classification_dim;
+            Variable<eLink>* m_node_classification_dim{};
             /** variable storing the id of the geom entity each node is linked to*/
-            Variable<int>* m_node_classification_id;
+            Variable<int>* m_node_classification_id{};
             /** variable storing the dim. of the geom entity each edge is linked to*/
-            Variable<ELink>* m_edge_classification_dim;
+            Variable<eLink>* m_edge_classification_dim{};
             /** variable storing the id of the geom entity each edge is linked to*/
-            Variable<int>* m_edge_classification_id;
+            Variable<int>* m_edge_classification_id{};
             /** variable storing the dim. of the geom entity each face is linked to*/
-            Variable<ELink>* m_face_classification_dim;
+            Variable<eLink>* m_face_classification_dim{};
             /** variable storing the id of the geom entity each face is linked to*/
-            Variable<int>* m_face_classification_id;
+            Variable<int>* m_face_classification_id{};
         };
 
-        template <> GMDSCad_API GeomMeshLinker::ELink GeomMeshLinker::getGeomDim<Node>(const TCellID &AN);
-        template <> GMDSCad_API GeomMeshLinker::ELink GeomMeshLinker::getGeomDim<Edge>(const TCellID &AN);
-        template <> GMDSCad_API GeomMeshLinker::ELink GeomMeshLinker::getGeomDim<Face>(const TCellID &AN);
+        template <> GMDSCad_API GeomMeshLinker::eLink GeomMeshLinker::getGeomDim<Node>(const TCellID &AN);
+        template <> GMDSCad_API GeomMeshLinker::eLink GeomMeshLinker::getGeomDim<Edge>(const TCellID &AN);
+        template <> GMDSCad_API GeomMeshLinker::eLink GeomMeshLinker::getGeomDim<Face>(const TCellID &AN);
 
         template <> GMDSCad_API int GeomMeshLinker::getGeomId<Edge>(const TCellID &AN);
         template <> GMDSCad_API int GeomMeshLinker::getGeomId<Node>(const TCellID &AN);
         template <> GMDSCad_API int GeomMeshLinker::getGeomId<Face>(const TCellID &AN);
 
-        template <> GMDSCad_API std::pair<GeomMeshLinker::ELink,int> GeomMeshLinker::getGeomInfo<Node>(const TCellID& AN);
-        template <> GMDSCad_API std::pair<GeomMeshLinker::ELink,int> GeomMeshLinker::getGeomInfo<Edge>(const TCellID& AN);
-        template <> GMDSCad_API std::pair<GeomMeshLinker::ELink,int> GeomMeshLinker::getGeomInfo<Face>(const TCellID& AN);
+        template <> GMDSCad_API std::pair<GeomMeshLinker::eLink,int> GeomMeshLinker::getGeomInfo<Node>(const TCellID& AN);
+        template <> GMDSCad_API std::pair<GeomMeshLinker::eLink,int> GeomMeshLinker::getGeomInfo<Edge>(const TCellID& AN);
+        template <> GMDSCad_API std::pair<GeomMeshLinker::eLink,int> GeomMeshLinker::getGeomInfo<Face>(const TCellID& AN);
 
 /*----------------------------------------------------------------------------*/
     } // namespace cad

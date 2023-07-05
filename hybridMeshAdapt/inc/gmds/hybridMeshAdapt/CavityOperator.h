@@ -47,9 +47,9 @@ namespace gmds
             /*return a vector of node that are in the cavity*/
             bool                                 nodeInCavity(const TInt node);
 
-            const std::vector<TInt> &            getNodeInCavity(){return m_nodeInCavity;}
+            const std::vector<TSimplexID> &            getNodeInCavity(){return m_nodeInCavity;}
 
-            const std::vector<TInt> &            getSurfaceNodeInCavity(){return m_surfaceNodeInCavity;}
+            const std::vector<TSimplexID> &            getSurfaceNodeInCavity(){return m_surfaceNodeInCavity;}
 
             void addNodeInCavity           (const TInt node){m_nodeInCavity.push_back(node);}
 
@@ -63,13 +63,31 @@ namespace gmds
 
             const std::vector<TSimplexID>  &  getOppositesSimplex() const {return m_oppositeCell;}
 
+            const std::vector<std::vector<TInt>>  &  getNodesToReconnect_Tri() const {return m_nodesToReconnect_Tri;}
+
+            const std::vector<unsigned int>  &  getIndices_Tri() const {return m_indices;}
+
+            const std::vector<TSimplexID>  &  getOppositesSimplex_Tri() const {return m_oppositeTri;}
+
             const std::vector<std::vector<TInt>>  &  getTriangleReconstructionInfo() const {return m_localsNodeForReconnectionWithTriangle;}
 
             const std::vector<std::vector<TSimplexID>>  &  getoppositeTriangle          () const {return m_oppositeTriangle;}
 
-            const std::vector<std::vector<TInt>>  &  getTriangleIndices           () const {return m_triangleIndices;}
+            const std::vector<std::vector<TSimplexID>>  &  getTriangleIndices           () const {return m_triangleIndices;}
 
-            const std::vector<std::vector<TInt>>  &  getBorderEdges               () const {return m_borderSurfaceNode;}
+            const std::vector<std::vector<TSimplexID>>  &  getBorderEdges               () const {return m_borderSurfaceNode;}
+
+            const std::map<std::pair<TInt, TInt>, TSimplexID> & getReinsertionData () const {return m_mapForReinsertion;}
+
+            void setReinsertionData (const std::map<std::pair<TInt, TInt>, TSimplexID> & mapForReinsertion) {m_mapForReinsertion = mapForReinsertion;}
+
+            const std::map<TInt, TSimplexID> & getReinsertionSurfaceData () const {return m_mapForReinsertionSurface;}
+
+            void setReinsertionSurfaceData (const std::map<TInt, TSimplexID> & mapForReinsertionSurface) {m_mapForReinsertionSurface = mapForReinsertionSurface;}
+
+            const std::map<std::pair<TInt, TInt>, std::pair<unsigned int, TSimplexID>> & getTrianglesColor () const {return m_mapForTriangleColor;}
+
+            void setTrianglesColor (const std::map<std::pair<TInt, TInt>, std::pair<unsigned int, TSimplexID>> & mapForTriangleColor) {m_mapForTriangleColor = mapForTriangleColor;}
 
             void setEdgeContainingNode                                   (const TInt node0, const TInt node1){m_edgeContainingNode = std::make_pair(node0, node1);};
 
@@ -92,6 +110,10 @@ namespace gmds
 
             bool isTetragonalizableFrom(const TInt nodeToInsert);
 
+            bool getNodeInfoEdge() const {return alreadyBelongingToAnEdge;}
+
+            void setNodeInfoEdge(const bool nodeInfo) {alreadyBelongingToAnEdge = nodeInfo;}
+
           private:
             /*represente the cavity In*/
             std::vector<TSimplexID> m_cavityCellIn;
@@ -104,21 +126,37 @@ namespace gmds
 
             std::vector<TSimplexID> m_oppositeCell;
 
+            std::vector<std::vector<TInt>> m_nodesToReconnect_Tri;
+
+            std::vector<TSimplexID> m_oppositeTri;
+
+            std::vector<unsigned int> m_indices;
+
             std::vector<std::vector<TInt>> m_localsNodeForReconnectionWithTriangle;
 
             std::vector<std::vector<TSimplexID>> m_oppositeTriangle;
 
-            std::vector<std::vector<TInt>> m_triangleIndices;
+            std::vector<std::vector<TSimplexID>> m_triangleIndices;
 
-            std::vector<std::vector<TInt>> m_borderSurfaceNode;
+            std::vector<std::vector<TSimplexID>> m_borderSurfaceNode;
 
-            std::vector<TInt> m_nodeInCavity;
+            std::vector<TSimplexID> m_nodeInCavity;
 
-            std::vector<TInt> m_surfaceNodeInCavity;
+            std::vector<TSimplexID> m_surfaceNodeInCavity;
 
             std::pair<TInt, TInt> m_edgeContainingNode{};
 
+            std::map<std::pair<TInt, TInt>, TSimplexID> m_mapForReinsertion{};
+
+            std::map<TInt, TSimplexID> m_mapForReinsertionSurface{};
+
+            //the second argument off the template is the color of the triangle that will be built
+            // and the opposite triangle to connect with
+            std::map<std::pair<TInt, TInt>, std::pair<unsigned int, TSimplexID>> m_mapForTriangleColor{};
+
             SimplexMesh*      m_simplex_mesh   = nullptr;
+
+            bool alreadyBelongingToAnEdge = false;
           };
 
 
@@ -135,7 +173,7 @@ namespace gmds
 
           //void cavityReduction(CavityIO& cavityIO, std::vector<TSimplexID>& initCavity, const simplicesNode::SimplicesNode& node, const CriterionRAIS& criterion, const CavityReduction& cavityReduction, const std::vector<TSimplexID> v = std::vector<TSimplexID>{});
 
-          void selectConnexTriangle(const TSimplexID& firstTriangle, const gmds::BitVector& triangleInCav, gmds::BitVector& connexTriangle);
+          void selectConnexTriangle(const TSimplexID& firstTriangle, const gmds::BitVector& triangleInCav, gmds::BitVector& connexTriangle, const TInt nodeToConnect);
 
           void fillSelectedIds(const std::vector<TSimplexID>& cavity);
 
@@ -146,7 +184,6 @@ namespace gmds
           SimplexMesh*      m_simplex_mesh   = nullptr;
 
           BitVector         m_tetSelectedIds;
-
         };
     }
   }

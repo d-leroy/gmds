@@ -10,7 +10,7 @@
 #include <gmds/ig/Mesh.h>
 #include <gmds/claire/Params.h>
 #include <gmds/claire/AbstractAeroBoundaries.h>
-#include <gmds/cad/FACManager.h>
+#include <gmds/cadfac/FACManager.h>
 #include <string>
 #include <map>
 #include <fstream>
@@ -38,7 +38,7 @@ class LIB_GMDS_CLAIRE_API AbstractAeroPipeline{
 	/** @brief Constructor.
          *  @param
 	 */
-	AbstractAeroPipeline(ParamsAero Aparams);
+	explicit AbstractAeroPipeline(std::string &Aparams, std::string &Aworking_dir);
 	/*--------------------------------------------------------------------*/
 	/** @brief Destructor.
          *  @param
@@ -59,8 +59,6 @@ class LIB_GMDS_CLAIRE_API AbstractAeroPipeline{
 	ParamsAero m_params;
 	/** Variable sur le nouveau maillage, indique à quelle couche appartient un noeud */
 	Variable<int>* m_couche_id;
-	/** Nombre de couches de mailles */
-	int m_nbr_couches;
 	/** Manager */
 	cad::FACManager* m_manager;
 	/** Linker maillage T entrée à la géométrie */
