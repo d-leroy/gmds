@@ -6,6 +6,8 @@
 #include <gmds/io/IGMeshIOService.h>
 #include <gmds/io/VTKWriter.h>
 /*----------------------------------------------------------------------------*/
+
+
 TEST(GridBuildOpClass, test2D)
 {
     gmds::Mesh m(gmds::MeshModel(gmds::DIM3|gmds::N|gmds::F|gmds::F2N));

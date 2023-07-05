@@ -62,6 +62,10 @@ if (WITH_CODE_COVERAGE)
     set(WITH_TEST ON)
 endif()
 #==============================================================================
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+endif()
+#==============================================================================
 # Location of cmake modules
 #==============================================================================
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
@@ -69,6 +73,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 # Location of exports headers
 #==============================================================================
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/exports)
+#==============================================================================
+#=======================================
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+set(pybind11_DIR "${Python_SITELIB}/pybind11/share/cmake/pybind11")
+find_package(pybind11 REQUIRED)
+add_library(scihooklib SHARED IMPORTED)
+set_property(TARGET scihooklib PROPERTY IMPORTED_LOCATION ${Python_SITELIB}/scihook/libscihook.so)
+#=======================================
 #==============================================================================
 #Tester avec External project, qui build en configure et projet à part (pas de redeploiement)
 # Fait un projet dont on depend et pas inclus

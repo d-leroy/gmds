@@ -1,5 +1,6 @@
 /*----------------------------------------------------------------------------*/
 #include <gmds/igalgo/GridBuilder.h>
+#include <gmds/igalgo/GridBuilderTriggers.h>
 /*----------------------------------------------------------------------------*/
 #include <sstream>
 #include <set>
@@ -8,13 +9,16 @@ using namespace gmds;
 /*----------------------------------------------------------------------------*/
 GridBuilder::GridBuilder(Mesh* AMesh, const TInt ADim)
         :m_mesh(AMesh), m_dim(ADim)
-{}
+{
+	INITIALIZE_GMDS_GRIDBUILDER_EVENTS
+}
 /*----------------------------------------------------------------------------*/
 GridBuilder::~GridBuilder()
 {}
 /*----------------------------------------------------------------------------*/
 bool GridBuilder::isValid() const
 {
+	TRIGGER_GMDS_GRIDBUILDER_ISVALID_BEFORE
     if(m_dim==3)
         return (m_mesh->getModel()==(DIM3|R|N|R2N));
     else if(m_dim==2)
@@ -27,6 +31,7 @@ bool GridBuilder::isValid() const
 /*----------------------------------------------------------------------------*/
 void GridBuilder::execute(const gmds::TInt AXNb, const gmds::TCoord AXStep, const gmds::TInt AYNb,
                           const gmds::TCoord AYStep, const gmds::TInt AZNb, const gmds::TCoord AZStep) {
+	TRIGGER_GMDS_GRIDBUILDER_EXECUTE_BEFORE
     m_mesh->clear();
     if (m_dim == 2){
         build2D(AXNb, AXStep, AYNb, AYStep);
@@ -34,6 +39,7 @@ void GridBuilder::execute(const gmds::TInt AXNb, const gmds::TCoord AXStep, cons
     else if(m_dim==3){
         build3D(AXNb,AXStep,AYNb,AYStep,AZNb,AZStep);
     }
+	TRIGGER_GMDS_GRIDBUILDER_EXECUTE_AFTER
 }
 /*----------------------------------------------------------------------------*/
 void GridBuilder::build2D(const gmds::TInt AXNb,
@@ -41,6 +47,7 @@ void GridBuilder::build2D(const gmds::TInt AXNb,
                           const gmds::TInt AYNb,
                           const gmds::TCoord AYStep)
 {
+	TRIGGER_GMDS_GRIDBUILDER_BUILD2D_BEFORE
 	std::vector<TCellID> node_ids = std::vector<TCellID>();
 	const gmds::TInt N = AXNb * AYNb;
 	node_ids.reserve(N);
@@ -61,6 +68,7 @@ void GridBuilder::build2D(const gmds::TInt AXNb,
 			node_ids.at(k + AYNb + 1),		// [x + 1][y + 1],
 			node_ids.at(k + 1));			// [x][y + 1],
 	}
+	TRIGGER_GMDS_GRIDBUILDER_BUILD2D_AFTER
 }
 /*----------------------------------------------------------------------------*/
 void GridBuilder::build3D(const gmds::TInt AXNb,
@@ -70,6 +78,7 @@ void GridBuilder::build3D(const gmds::TInt AXNb,
 	const gmds::TInt AZNb,
 	const gmds::TCoord AZStep)
 {
+	TRIGGER_GMDS_GRIDBUILDER_BUILD3D_BEFORE
 	std::vector<TCellID> node_ids = std::vector<TCellID>();
 	const gmds::TInt N = AXNb * AYNb * AZNb;
 	node_ids.reserve(N);
@@ -96,4 +105,5 @@ void GridBuilder::build3D(const gmds::TInt AXNb,
 			node_ids.at(k + AZYNb + AZNb + 1),	// [x + 1][y + 1][z + 1],
 			node_ids.at(k + AZNb + 1));			// [x][y + 1][z + 1]);
 	}
+	TRIGGER_GMDS_GRIDBUILDER_BUILD3D_AFTER
 }

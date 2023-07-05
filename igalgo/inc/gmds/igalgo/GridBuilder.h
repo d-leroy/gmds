@@ -3,6 +3,7 @@
 #define GMDS_GRID_BUILDER_H
 /*----------------------------------------------------------------------------*/
 #include <gmds/ig/Mesh.h>
+#include <gmds/igalgo/GridBuilderTriggers.h>
 #include "GMDSIgAlgo_export.h"
 /*----------------------------------------------------------------------------*/
 #include <map>
@@ -65,6 +66,8 @@ namespace gmds{
 
         /** Grid dimension*/
         TInt  m_dim;
+
+    DECLARE_GMDS_GRIDBUILDER_EVENTS
     };
     /*----------------------------------------------------------------------------*/
 }

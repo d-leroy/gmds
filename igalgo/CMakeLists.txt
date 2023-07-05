@@ -12,7 +12,9 @@ set(GMDS_INC
         inc/gmds/igalgo/BoundaryOperator.h
         inc/gmds/igalgo/BoundaryOperator2D.h
         inc/gmds/igalgo/GridBuilder.h
-        inc/gmds/igalgo/THexBuilder.h)
+        inc/gmds/igalgo/THexBuilder.h
+        inc/gmds/igalgo/GridBuilderExecutionContexts.h
+        inc/gmds/igalgo/GridBuilderTriggers.h)
 set(GMDS_SRC
         src/BoundaryExtractor3D.cpp
         src/BoundaryExtractor2D.cpp
@@ -36,6 +38,12 @@ include(GNUInstallDirs)
 #LIBRARY TO INSTALL
 target_link_libraries(${GMDS_LIB} PUBLIC
         ${LIB_GMDS_IG} ${LIB_GMDS_QUALITY})
+#=======================================
+#=======================================
+target_link_libraries(${GMDS_LIB} PUBLIC
+        scihooklib pybind11::embed)
+#=======================================
+#=======================================
 
 target_compile_features(${GMDS_LIB} PUBLIC cxx_std_14)
 
@@ -44,6 +52,12 @@ target_include_directories(${GMDS_LIB} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
         )
+#=======================================
+#=======================================
+target_include_directories(${GMDS_LIB} PUBLIC
+        $<BUILD_INTERFACE:${Python_SITELIB}/scihook/include>)
+#=======================================
+#=======================================
 set_target_properties(${GMDS_LIB} PROPERTIES PUBLIC_HEADER "${GMDS_INC}")
 
 install(TARGETS ${GMDS_LIB}
