@@ -85,8 +85,11 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/exports)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 set(pybind11_DIR "${Python_SITELIB}/pybind11/share/cmake/pybind11")
 find_package(pybind11 REQUIRED)
-add_library(scihooklib SHARED IMPORTED)
-set_property(TARGET scihooklib PROPERTY IMPORTED_LOCATION ${Python_SITELIB}/scihook/libscihook.so)
+list(APPEND CMAKE_PREFIX_PATH "${SCIHOOK_INSTALL_PREFIX}")
+find_library(SCIHOOK_LIB scihook)
+if(SCIHOOK_LIB)
+  message(STATUS "Found SciHook: ${SCIHOOK_LIB}")
+endif()
 #=======================================
 #==============================================================================
 #Tester avec External project, qui build en configure et projet à part (pas de redeploiement)

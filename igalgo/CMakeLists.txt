@@ -41,7 +41,7 @@ target_link_libraries(${GMDS_LIB} PUBLIC
 #=======================================
 #=======================================
 target_link_libraries(${GMDS_LIB} PUBLIC
-        scihooklib pybind11::embed)
+        ${SCIHOOK_LIB} pybind11::embed)
 #=======================================
 #=======================================
 
@@ -55,7 +55,7 @@ target_include_directories(${GMDS_LIB} PUBLIC
 #=======================================
 #=======================================
 target_include_directories(${GMDS_LIB} PUBLIC
-        $<BUILD_INTERFACE:${Python_SITELIB}/scihook/include>)
+        $<BUILD_INTERFACE:${SCIHOOK_INSTALL_PREFIX}/include>)
 #=======================================
 #=======================================
 set_target_properties(${GMDS_LIB} PROPERTIES PUBLIC_HEADER "${GMDS_INC}")
